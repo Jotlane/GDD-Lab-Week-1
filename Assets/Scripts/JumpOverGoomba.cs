@@ -28,7 +28,7 @@ public class JumpOverGoomba : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        kickCheck();
+
 
     }
 
@@ -39,7 +39,6 @@ public class JumpOverGoomba : MonoBehaviour
         {
             onGroundState = false;
             countScoreState = true;
-            Debug.Log("oooooooo");
         }
 
         // when jumping, and Goomba is near Mario and we haven't registered our score
@@ -52,7 +51,6 @@ public class JumpOverGoomba : MonoBehaviour
                 scoreText.text = "Score: " + score.ToString();
                 Debug.Log(score);
             }
-            Debug.Log("hkasjhda");
         }
     }
 
@@ -72,19 +70,6 @@ public class JumpOverGoomba : MonoBehaviour
         else
         {
             Debug.Log("not on ground");
-            return false;
-        }
-    }
-    private bool kickCheck()
-    {
-        if (Physics2D.BoxCast(transform.position, kickboxSize, 0, transform.right, kickmaxDistance, kicklayerMask))
-        {
-            Debug.Log(Physics2D.BoxCast(transform.position, kickboxSize, 0, transform.right, kickmaxDistance, kicklayerMask));
-            return true;
-        }
-        else
-        {
-            Debug.Log("cannotkick");
             return false;
         }
     }

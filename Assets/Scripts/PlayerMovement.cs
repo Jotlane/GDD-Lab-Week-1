@@ -23,7 +23,10 @@ public class PlayerMovement : MonoBehaviour
     public GameObject endScreen;
     private bool dead = false;
     public AudioSource deathSound;
+    public AudioSource audioKick;
     public GameObject kickCollider;
+    public KickScript kickScript;
+    public float kickSpeed = 40;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,12 +43,14 @@ public class PlayerMovement : MonoBehaviour
         {
             faceRightState = false;
             marioSprite.flipX = true;
+            kickCollider.GetComponent<BoxCollider2D>().offset = new Vector2(-1, 0);
         }
 
         if (Input.GetKeyDown("d") && !faceRightState)
         {
             faceRightState = true;
             marioSprite.flipX = false;
+            kickCollider.GetComponent<BoxCollider2D>().offset = new Vector2(1, 0);
         }
     }
     void OnCollisionEnter2D(Collision2D col)
@@ -76,6 +81,22 @@ public class PlayerMovement : MonoBehaviour
             onGroundState = false;
 
         }
+        if (Input.GetKeyDown("k") && kickScript.canKick)
+        {
+            kickScript.kickTarget.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+            if (faceRightState)
+            {
+                kickScript.kickTarget.GetComponent<Rigidbody2D>().AddForce(new Vector2(1, 2) * kickSpeed, ForceMode2D.Impulse);
+                GetComponent<Animator>().SetTrigger("New Trigger");
+            }
+            else
+            {
+                kickScript.kickTarget.GetComponent<Rigidbody2D>().AddForce(new Vector2(-1, 2) * kickSpeed, ForceMode2D.Impulse);
+                GetComponent<Animator>().SetTrigger("Trigger2");
+            }
+            kickScript.kickTarget.GetComponent<CircleCollider2D>().isTrigger = false;
+            audioKick.Play();
+        }
     }
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -102,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
         // reset everything
         ResetGame();
         // resume time
-        Time.timeScale = 1.0f;
+        //Time.timeScale = 1.0f;
     }
 
     private void ResetGame()
@@ -117,7 +138,20 @@ public class PlayerMovement : MonoBehaviour
         // reset Goomba
         foreach (Transform eachChild in enemies.transform)
         {
+            eachChild.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             eachChild.transform.localPosition = eachChild.GetComponent<EnemyMovement>().startPosition;
+            eachChild.gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            eachChild.gameObject.GetComponent<Rigidbody2D>().totalForce = Vector2.zero;
+            eachChild.gameObject.GetComponent<Rigidbody2D>().simulated = false;
+            eachChild.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+            eachChild.gameObject.GetComponent<Rigidbody2D>().simulated = true;
+            eachChild.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+            eachChild.GetComponent<EnemyMovement>().restartTry = true;
+            eachChild.GetComponent<CircleCollider2D>().isTrigger = true;
+            Debug.Log("restrys");
+            Debug.Log(eachChild.GetComponent<EnemyMovement>().restartTry);
+
+            //eachChild.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
         }
         jumpOverGoomba.score = 0;
         marioSprite.sprite = normalSprite;
