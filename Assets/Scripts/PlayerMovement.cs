@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
     public AudioSource audioKick;
     public GameObject kickCollider;
     public KickScript kickScript;
+    public AudioSource bgm;
+
     public float kickSpeed = 40;
     // Start is called before the first frame update
     void Start()
@@ -113,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
                 HUD.SetActive(false);
                 endScreen.SetActive(true);
                 deathSound.Play();
+                bgm.Stop();
             }
         }
     }
@@ -159,5 +162,6 @@ public class PlayerMovement : MonoBehaviour
         dead = false;
         HUD.SetActive(true);
         endScreen.SetActive(false);
+        bgm.Play();
     }
 }

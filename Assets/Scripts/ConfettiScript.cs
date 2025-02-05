@@ -7,6 +7,7 @@ public class ConfettiScript : MonoBehaviour
 {
     public GameObject confetti;
     public AudioSource win;
+    public JumpOverGoomba goom;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +30,8 @@ public class ConfettiScript : MonoBehaviour
                 confettiInstance.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1.0f, 6.0f), Random.Range(10f, 30.0f)), ForceMode2D.Impulse);
             }
             win.Play();
+            goom.score += 100;
+            goom.scoreText.text = "Score: " + goom.score.ToString() + "!!!!!!";
         }
     }
 }

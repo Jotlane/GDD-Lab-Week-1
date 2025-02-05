@@ -19,6 +19,7 @@ public class JumpOverGoomba : MonoBehaviour
     public float kickmaxDistance;
     public LayerMask layerMask;
     public LayerMask kicklayerMask;
+    public AudioSource pointsss;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +51,7 @@ public class JumpOverGoomba : MonoBehaviour
                 score++;
                 scoreText.text = "Score: " + score.ToString();
                 Debug.Log(score);
+                pointsss.Play();
             }
         }
     }
